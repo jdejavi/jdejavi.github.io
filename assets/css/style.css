@@ -78,3 +78,82 @@ footer {
   border-top: 1px solid var(--border);
   color: var(--text-muted);
 }
+
+/* HERO */
+
+.hero {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.hero-sub {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* STATS */
+
+.stats {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.stat {
+  background-color: var(--bg-secondary);
+  padding: 20px 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* RECENT POSTS */
+
+.recent h2 {
+  margin-bottom: 30px;
+  color: var(--accent);
+}
+
+.post-card {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  transition: border 0.2s ease;
+}
+
+.post-card:hover {
+  border: 1px solid var(--accent);
+}
+
+.post-card h3 {
+  margin-bottom: 5px;
+}
+
+.post-card a {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.post-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
