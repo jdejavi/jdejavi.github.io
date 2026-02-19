@@ -16,3 +16,11 @@ defaults:
       type: posts
     values:
       layout: post
+  - scope:
+      path: "es"
+    values:
+      lang: es
+  - scope:
+      path: ""
+    values:
+      lang: en
