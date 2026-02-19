@@ -7,9 +7,9 @@ tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage
 lang: es
 ---
 # Información general
-> Nombre			: Flustered
-> Sistema operativo : Linux
-> Dificultad		: Media
+- Nombre			: Flustered
+- Sistema operativo : Linux
+- Dificultad		: Media
 
 # Conceptos vistos en la máquina
 ```
