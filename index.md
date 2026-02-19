@@ -29,7 +29,11 @@ title: Inicio
   <h2>Latest Writeups</h2>
 
   {% for post in site.posts limit:5 %}
-    <div class="post-card">
+  <div class="post-card" style="display:flex; align-items:flex-start; gap:16px;">
+    {% if post.image %}
+      <img src="{{ post.image }}" alt="{{ post.title }}" width="64" height="64" style="border-radius:50%; object-fit:cover;">
+    {% endif %}
+    <div style="display:flex; flex-direction:column;">
       <a href="{{ post.url }}">
         <h3>{{ post.title }}</h3>
       </a>
@@ -37,5 +41,6 @@ title: Inicio
         {{ post.date | date: "%d %b %Y" }} · {{ post.tags | join: ", " }}
       </p>
     </div>
-  {% endfor %}
+  </div>
+{% endfor %}
 </section>
