@@ -31,19 +31,41 @@ body {
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 25px 40px;
   border-bottom: 1px solid var(--border);
 }
 
+.left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 25px;
+}
+
+.lang-nav {
+  display: flex;
+  gap: 15px;
+}
+
 header a {
-  color: var(--text);
   text-decoration: none;
-  margin-left: 20px;
+  color: var(--text);
 }
 
 header a:hover {
   color: var(--accent);
 }
+
+.logo {
+  color: var(--accent);
+  font-weight: 500;
+}
+
 
 .logo a {
   color: var(--accent);
