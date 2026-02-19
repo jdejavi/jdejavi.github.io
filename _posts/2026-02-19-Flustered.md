@@ -6,15 +6,6 @@ categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: es
 ---
-{% include writeup_card.html
-   title="Flustered"
-   difficulty="Medium"
-   release_date="31 Jan 2022"
-   retire_date="31 Jan 2022"
-   os="Linux"
-   note="Non-competitive release: No Bloods"
-   avatar="/assets/images/flustered/box-flustered.png"
-%}
 
 # Conceptos vistos en la máquina
 ```
