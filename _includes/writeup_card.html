@@ -1,0 +1,33 @@
+<!-- _includes/writeup_card.html -->
+<div class="writeup-card">
+  <div class="writeup-header">
+    <img src="{{ include.avatar }}" alt="Avatar" class="avatar">
+    <div class="title-section">
+      <h3 class="writeup-title">{{ include.title }}</h3>
+      <span class="difficulty">{{ include.difficulty }}</span>
+    </div>
+  </div>
+
+  <div class="writeup-details">
+    <div>
+      <strong>Release Date:</strong> {{ include.release_date }}
+    </div>
+    <div>
+      <strong>Retire Date:</strong> {{ include.retire_date }}
+    </div>
+    <div>
+      <strong>OS:</strong> {{ include.os }}
+    </div>
+  </div>
+
+  <div class="writeup-footer">
+    <div class="note">{{ include.note }}</div>
+    <div class="creator">
+      <img src="{{ include.creator_avatar }}" alt="Creator Avatar" class="creator-avatar">
+      <div>
+        <strong>{{ include.creator_name }}</strong>
+        <span class="rank">{{ include.creator_rank }}</span>
+      </div>
+    </div>
+  </div>
+</div>
