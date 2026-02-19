@@ -12,16 +12,16 @@ title: Inicio
 
 <section class="stats">
   <div class="stat">
-    <span class="stat-number">x</span>
+    <span class="stat-number">104</span>
     <span class="stat-label">HTB Machines</span>
   </div>
   <div class="stat">
-    <span class="stat-number">x</span>
-    <span class="stat-label">THM Rooms</span>
+    <span class="stat-number">1</span>
+    <span class="stat-label">Certifications</span>
   </div>
   <div class="stat">
-    <span class="stat-number">x</span>
-    <span class="stat-label">Privilege Escalations</span>
+    <span class="stat-number">0</span>
+    <span class="stat-label">Pro Labs</span>
   </div>
 </section>
 
