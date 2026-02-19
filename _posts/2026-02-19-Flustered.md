@@ -6,6 +6,10 @@ categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: es
 ---
+# Información general
+> Nombre			: Flustered
+> Sistema operativo : Linux
+> Dificultad		: Media
 
 # Conceptos vistos en la máquina
 ```
@@ -22,12 +26,10 @@ lang: es
 
 # Enumeration & Initial Foothold
 
->📍 Información general
->**IP:**
+>📍IP
 >```
 >10.10.11.131
 >```
->*Sistema Operativo*:Linux
 
 >🔐 Usuarios/Contraseñas
 ```
