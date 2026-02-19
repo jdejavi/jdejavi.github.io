@@ -9,7 +9,7 @@ title: Search machines
     {% for post in site.posts %}
       <div class="post-card" data-title="{{ post.title | downcase }}" data-content="{{ post.content | strip_html | downcase }}" data-tags="{{ post.tags | join: ',' | downcase }}">
         <a href="{{ post.url }}">
-          <h3>{{ post.title }}</h3>
+          <img src="{{ post.image }}" alt="{{ post.title }}" width="64" height="64" style="border-radius:50%; object-fit:cover;">>
         </a>
         <p class="post-meta">{{ post.date | date: "%d %b %Y" }} · {{ post.tags | join: ", " }}</p>
       </div>
