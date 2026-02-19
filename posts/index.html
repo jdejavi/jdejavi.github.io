@@ -1,0 +1,36 @@
+---
+layout: default
+title: Posts
+---
+
+<h1>Search machines</h1>
+
+<input type="text" id="search" placeholder="Type to search..." style="padding: 8px; width: 100%; max-width: 400px; margin-bottom: 20px;" />
+
+<div id="posts-list">
+  {% for post in site.posts %}
+    <div class="post-item" data-title="{{ post.title | escape }}" data-content="{{ post.content | strip_html | escape }}">
+      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+      <p>{{ post.excerpt | strip_html }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  const searchInput = document.getElementById('search');
+  const posts = Array.from(document.querySelectorAll('.post-item'));
+
+  searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+
+    posts.forEach(post => {
+      const title = post.dataset.title.toLowerCase();
+      const content = post.dataset.content.toLowerCase();
+      if (title.includes(query) || content.includes(query)) {
+        post.style.display = 'block';
+      } else {
+        post.style.display = 'none';
+      }
+    });
+  });
+</script>
