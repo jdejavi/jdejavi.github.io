@@ -186,3 +186,73 @@ footer {
   margin: 20px 0;
   border: 1px solid var(--border);
 }
+
+.writeup-card {
+  background-color: #1a1e2b;
+  border-radius: 10px;
+  padding: 16px;
+  color: #f0f0f0;
+  max-width: 400px;
+  font-family: sans-serif;
+}
+
+.writeup-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  margin-right: 12px;
+  border: 2px solid #a6ff00; /* resalta avatar */
+}
+
+.title-section {
+  flex-grow: 1;
+}
+
+.writeup-title {
+  margin: 0;
+  color: #3f83f8;
+}
+
+.difficulty {
+  background-color: #000;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+}
+
+.writeup-details div {
+  margin-bottom: 4px;
+}
+
+.writeup-footer {
+  border-top: 1px solid #333;
+  padding-top: 8px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.creator {
+  display: flex;
+  align-items: center;
+}
+
+.creator-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+
+.note {
+  font-size: 0.85em;
+  color: #f65c5c;
+}
