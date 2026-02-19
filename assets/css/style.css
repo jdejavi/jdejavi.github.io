@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #0f1115;
+  --bg-secondary: #151922;
+  --text: #d1d5db;
+  --text-muted: #8b949e;
+  --accent: #22c55e;
+  --border: rgba(255,255,255,0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+header a {
+  color: var(--text);
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+header a:hover {
+  color: var(--accent);
+}
+
+.logo a {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.post h1 {
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 30px;
+}
+
+.post p {
+  margin-bottom: 15px;
+}
+
+.post pre {
+  background-color: var(--bg-secondary);
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+}
