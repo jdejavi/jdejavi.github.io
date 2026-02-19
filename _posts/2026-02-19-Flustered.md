@@ -6,7 +6,15 @@ categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: es
 ---
-
+{% include writeup_card.html
+   title="Flustered"
+   difficulty="Medium"
+   release_date="31 Jan 2022"
+   retire_date="31 Jan 2022"
+   os="Linux"
+   note="Non-competitive release: No Bloods"
+   avatar="/assets/images/flustered/box-flustered.png"
+%}
 
 # Conceptos vistos en la máquina
 ```
@@ -23,19 +31,19 @@ lang: es
 
 # Enumeration & Initial Foothold
 
->[!tip] 📍 Información general
+>📍 Información general
 >**IP:**
 >```
 >10.10.11.131
 >```
 >*Sistema Operativo*:Linux
 
->[!danger] 🔐 Usuarios/Contraseñas
+>🔐 Usuarios/Contraseñas
+```
+lance.friedman:o>WJ5-jD<5^m3
 ```
 
-```
-
->[!quote] 🪪 Dominios
+>🪪 Dominios
 ```
 flustered.htb
 steampunk-era.htb
