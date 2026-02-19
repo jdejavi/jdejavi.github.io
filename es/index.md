@@ -12,6 +12,21 @@ permalink: /es/
   </p>
 </section>
 
+<section class="stats">
+  <div class="stat">
+    <span class="stat-number">104</span>
+    <span class="stat-label">Máquinas resueltas</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">1</span>
+    <span class="stat-label">Certificaciones</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">0</span>
+    <span class="stat-label">Pro labs</span>
+  </div>
+</section>
+
 <section class="recent">
   <h2>Últimos Writeups</h2>
 
