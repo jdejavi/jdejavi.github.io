@@ -157,3 +157,10 @@ footer {
   font-size: 0.8rem;
   color: var(--text-muted);
 }
+
+.post img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+}
