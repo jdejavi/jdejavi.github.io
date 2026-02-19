@@ -6,10 +6,8 @@ categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: es
 ---
-# Información general
-- Nombre			: Flustered
-- Sistema operativo : Linux
-- Dificultad		: Media
+
+![]({{ "/assets/images/flustered/flustered-card.png" | relative_url }})
 
 # Conceptos vistos en la máquina
 ```
