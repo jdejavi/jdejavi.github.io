@@ -5,6 +5,7 @@ date: 2026-02-19 10:00:00
 categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: es
+image: /assets/images/flustered/box-flustered.png
 ---
 
 ![]({{ "/assets/images/flustered/flustered-card.png" | relative_url }})
