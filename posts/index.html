@@ -1,36 +1,121 @@
 ---
 layout: default
-title: Posts
+title: Buscar Posts
 ---
 
-<h1>Search machines</h1>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #121212;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-<input type="text" id="search" placeholder="Type to search..." style="padding: 8px; width: 100%; max-width: 400px; margin-bottom: 20px;" />
+  .search-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    background-color: #1e1e2f;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-<div id="posts-list">
-  {% for post in site.posts %}
-    <div class="post-item" data-title="{{ post.title | escape }}" data-content="{{ post.content | strip_html | escape }}">
-      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-      <p>{{ post.excerpt | strip_html }}</p>
-    </div>
-  {% endfor %}
+  #search {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    background-color: #151922;
+    color: var(--text);
+  }
+
+  #results {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .post-card {
+    padding: 20px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: border 0.2s ease;
+  }
+
+  .post-card:hover {
+    border-color: var(--accent);
+  }
+
+  .post-card a {
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .post-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>
+
+<div class="search-container">
+  <input type="text" id="search" placeholder="Buscar posts..." autofocus />
+  <div id="results"></div>
 </div>
 
 <script>
   const searchInput = document.getElementById('search');
-  const posts = Array.from(document.querySelectorAll('.post-item'));
+  const resultsContainer = document.getElementById('results');
 
-  searchInput.addEventListener('input', function() {
-    const query = this.value.toLowerCase();
+  const posts = [
+    {% for post in site.posts %}
+      {
+        title: "{{ post.title | escape }}",
+        url: "{{ post.url }}",
+        date: "{{ post.date | date: "%d %b %Y" }}",
+        tags: "{{ post.tags | join: ', ' }}",
+        content: "{{ post.content | strip_html | escape }}"
+      },
+    {% endfor %}
+  ];
 
-    posts.forEach(post => {
-      const title = post.dataset.title.toLowerCase();
-      const content = post.dataset.content.toLowerCase();
-      if (title.includes(query) || content.includes(query)) {
-        post.style.display = 'block';
-      } else {
-        post.style.display = 'none';
-      }
+  function renderResults(filteredPosts) {
+    resultsContainer.innerHTML = '';
+    if (filteredPosts.length === 0) {
+      resultsContainer.innerHTML = '<p style="color: var(--text-muted);">No se encontraron posts.</p>';
+      return;
+    }
+
+    filteredPosts.forEach(post => {
+      const postDiv = document.createElement('div');
+      postDiv.classList.add('post-card');
+      postDiv.innerHTML = `
+        <a href="${post.url}">
+          <h3>${post.title}</h3>
+        </a>
+        <p class="post-meta">${post.date} · ${post.tags}</p>
+      `;
+      resultsContainer.appendChild(postDiv);
     });
+  }
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = posts.filter(post =>
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query) ||
+      post.tags.toLowerCase().includes(query)
+    );
+    renderResults(filtered);
   });
+  renderResults(posts);
 </script>
