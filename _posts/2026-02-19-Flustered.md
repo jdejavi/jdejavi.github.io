@@ -241,10 +241,9 @@ Enumeramos cosas basicas de la máquina, descubrimos un usuario llamado `jeniffe
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105202733.png" | relative_url }})
 
-
 El vol1 es propiedad de jennifer
-![]({{ "/assets/images/flustered/Pasted image 20251105203737.png" | relative_url }})
 
+![]({{ "/assets/images/flustered/Pasted image 20251105203737.png" | relative_url }})
 
 Lanzamos el linpeas para enumerar información relevante
 
