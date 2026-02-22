@@ -1,12 +1,15 @@
 ---
 layout: default
-title: Inicio
+title: Main
 ---
 
 <section class="hero">
-  <h1>0xm4t1</h1>
+  <h1>Welcome!</h1>
   <p class="hero-sub">
     Offensive Security · CTF Writeups · Technical Research
+  </p>
+  <p class="hero-description">
+    This is my personal website where I share my HackTheBox CTF solutions and my personal experiences obtaining certifications.
   </p>
 </section>
 
@@ -16,7 +19,7 @@ title: Inicio
     <span class="stat-label">HTB Machines</span>
   </div>
   <div class="stat">
-    <span class="stat-number">1</span>
+    <span class="stat-number">2</span>
     <span class="stat-label">Certifications</span>
   </div>
   <div class="stat">
