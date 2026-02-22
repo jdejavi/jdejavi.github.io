@@ -5,9 +5,6 @@ title: Main
 
 <section class="hero">
   <h1>Welcome!</h1>
-  <p class="hero-sub">
-    Offensive Security · CTF Writeups · Technical Research
-  </p>
   <p class="hero-description">
     This is my personal website where I share my HackTheBox CTF solutions and my personal experiences obtaining certifications.
   </p>
