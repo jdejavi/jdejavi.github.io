@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Analytics"
-date: 2026-02-22 12:48:50
+date: 2026-02-22 10.00.00
 categories: writeups
 tags: [CVE enumeration, password hunting, kernel exploits]
 lang: en
