@@ -3,6 +3,30 @@ layout: default
 title: Search machines
 ---
 
+<style>
+  #search::placeholder {
+    color: #bbbbbb; /* Color gris claro */
+    opacity: 1;     /* Necesario para Firefox */
+  }
+
+  /* Para navegadores antiguos o específicos */
+  #search::-webkit-input-placeholder { color: #bbbbbb; }
+  #search::-moz-placeholder { color: #bbbbbb; }
+  #search:-ms-input-placeholder { color: #bbbbbb; }
+
+  /* Estilo extra para que el texto que tú escribes sea blanco */
+  #search {
+    background: #222; /* Fondo oscuro para el input */
+    color: white;     /* Color de la letra al escribir */
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    outline: none;
+  }
+</style>
+
 <div class="search-container">
   <!-- He añadido un placeholder para que se sepa que es un buscador -->
   <input type="text" id="search" placeholder="Search by name, tag or content..." autofocus 
