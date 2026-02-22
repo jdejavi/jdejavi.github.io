@@ -4,36 +4,40 @@ title: Search machines
 ---
 
 <style>
-  #search::placeholder {
-    color: #bbbbbb; /* Color gris claro */
-    opacity: 1;     /* Necesario para Firefox */
-  }
-
-  /* Para navegadores antiguos o específicos */
-  #search::-webkit-input-placeholder { color: #bbbbbb; }
-  #search::-moz-placeholder { color: #bbbbbb; }
-  #search:-ms-input-placeholder { color: #bbbbbb; }
-
-  /* Estilo extra para que el texto que tú escribes sea blanco */
   #search {
-    background: #222; /* Fondo oscuro para el input */
-    color: white;     /* Color de la letra al escribir */
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     margin-bottom: 25px;
-    border: 1px solid #444;
+    
+    background-color: #1a1a1a;
+    color: #ffffff;           
+    
+    border: 1px solid #333;   
     border-radius: 8px;
-    outline: none;
+    font-size: 16px;
+    outline: none;             
+    transition: border-color 0.3s;
   }
+
+  #search:focus {
+    border-color: #007bff;     
+  }
+
+  #search::placeholder {
+    color: #888888;            
+    opacity: 1; 
+  }
+
+  #search::-webkit-input-placeholder { color: #888888; }
+  #search::-moz-placeholder { color: #888888; }
+  #search:-ms-input-placeholder { color: #888888; }
 </style>
 
 <div class="search-container">
-  <!-- He añadido un placeholder para que se sepa que es un buscador -->
-  <input type="text" id="search" autofocus />
+  <input type="text" id="search" placeholder="Type to search (name, tag, CVE...)" autofocus />
   
   <div id="results">
     {% for post in site.posts %}
-      <!-- IMPORTANTE: He añadido los atributos data- aquí abajo -->
       <div class="post-card" 
            data-title="{{ post.title | downcase }}" 
            data-tags="{{ post.tags | join: ' ' | downcase }}" 
@@ -46,9 +50,9 @@ title: Search machines
         
         <div style="display:flex; flex-direction:column;">
           <a href="{{ post.url }}">
-            <h3 style="margin:0;">{{ post.title }}</h3>
+            <h3 style="margin:0; color: #007bff;">{{ post.title }}</h3>
           </a>
-          <p class="post-meta" style="margin:4px 0;">
+          <p class="post-meta" style="margin:4px 0; color: #ccc;">
             {{ post.date | date: "%d %b %Y" }} · {{ post.tags | join: ", " }}
           </p>
         </div>
@@ -65,14 +69,12 @@ title: Search machines
     const query = searchInput.value.toLowerCase();
 
     posts.forEach(post => {
-      // Obtenemos los datos de los atributos data- que pusimos en el HTML
       const title = post.getAttribute('data-title') || "";
       const tags = post.getAttribute('data-tags') || "";
       const content = post.getAttribute('data-content') || "";
 
-      // Si la búsqueda coincide con el título, tags o contenido
       if (title.includes(query) || tags.includes(query) || content.includes(query)) {
-        post.style.display = 'flex'; // Usamos flex para que no se rompa el diseño original
+        post.style.display = 'flex';
       } else {
         post.style.display = 'none';
       }
