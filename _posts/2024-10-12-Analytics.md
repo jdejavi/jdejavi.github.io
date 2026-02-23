@@ -3,7 +3,7 @@ layout: post
 title: "Analytics"
 date: 2024-10-12 10:00:00
 categories: writeups
-tags: [CVE enumeration, password hunting, kernel exploits]
+tags: [Linux, CVE enumeration, password hunting, kernel exploits]
 lang: en
 image: /assets/images/analytics/analytics-box.png
 ---
@@ -81,7 +81,9 @@ We didn't find anything interesting from route fuzzing.
 Searching for the tool on the internet, we found that it is an open-source tool with its source code on GitHub → [source code](https://github.com/metabase/metabase)
 
 We will search the internet to see if this Metabase has any exploits, and we found this URL where they explain how to exploit it → [exploit RCE](https://github.com/m3m0o/metabase-pre-auth-rce-poc)
-We download it and follow the steps to run the CVE
+
+We download it and follow the steps to run the CVE:
+
 ![]({{ "/assets/images/analytics/Pasted image 20241012133341.png" | relative_url }})
 
 First, they tell us that we have to look for the setup-token value in the path /api/session/properties.
