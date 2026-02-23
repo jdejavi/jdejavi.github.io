@@ -3,7 +3,7 @@ layout: post
 title: "Flustered"
 date: 2025-11-05 10:00:00
 categories: writeups
-tags: [glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
+tags: [Linux, glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: en
 image: /assets/images/flustered/box-flustered.png
 ---
