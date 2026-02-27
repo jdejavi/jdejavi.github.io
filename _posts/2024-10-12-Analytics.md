@@ -5,7 +5,7 @@ date: 2024-10-12 10:00:00
 categories: writeups
 tags: [Linux, CVE enumeration, password hunting, kernel exploits]
 lang: en
-image: /assets/images/analytics/analytics-box.png
+image: /assets/images/analytics/analytics-box.webp
 ---
 
 ![]({{ "/assets/images/analytics/Pasted image 20260222122850.png" | relative_url }})
