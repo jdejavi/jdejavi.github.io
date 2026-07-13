@@ -117,6 +117,7 @@ We test the credentials via SSH and access the machine as the user metalytics.
 
 Now that we are inside the actual machine, we can view the user flag.
 ![]({{ "/assets/images/analytics/Pasted image 20241012133632.webp" | relative_url }})
+![]({{ "/assets/images/analytics/Pasted image 20241012133654.webp" | relative_url }})
 
 # Privesc
 
