@@ -12,11 +12,11 @@ title: Main
 
 <section class="stats">
   <div class="stat">
-    <span class="stat-number">104</span>
+    <span class="stat-number">135</span>
     <span class="stat-label">HTB Machines</span>
   </div>
   <div class="stat">
-    <span class="stat-number">2</span>
+    <span class="stat-number">3</span>
     <span class="stat-label">Certifications</span>
   </div>
   <div class="stat">
