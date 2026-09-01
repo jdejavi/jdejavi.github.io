@@ -5,8 +5,11 @@ date: 2026-02-04 10:00:00
 categories: writeups
 tags: [Windows, ASREPRoasting, ForceChangePassword_abuse, SeBackupPrivilege_abuse_(diskshadow)]
 lang: en
-image: /assets/images/blackfield/blackfield-box.webp
+image: /assets/images/blackfield/blackfield-logo.webp
 ---
+
+![]({{ "/assets/images/blackfield/blackfield-box.webp" | relative_url }})
+
 
 # Concepts covered in the machine
 ```
@@ -20,23 +23,23 @@ image: /assets/images/blackfield/blackfield-box.webp
 
 # Enumeration & Initial Foothold
 
->??IP
+>📍IP
 >```
 >10.129.229.17
 >```
 >*Operating System*: Windows
 
->?? Users:Passwords
+>🔐 Users:Passwords
 ```
 support:#00^BlackKnight
 ```
 
->?? Domains
+>🪪 Domains
 >```
 >blackfield.local
 >```
 
-## ?? Nmap scan
+## 🔎 Nmap scan
 
 ```python
 nmap -p- --open -sS --min-rate 3000 -vvv -n -Pn 10.129.229.17 -oG allPorts
