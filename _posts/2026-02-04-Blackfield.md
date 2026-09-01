@@ -244,7 +244,3 @@ We try to connect to the machine with this hash as Administrator, and we can get
 We're going to read the flag
 
 ![]({{ "/assets/images/blackfield/Pasted image 20260204203641.webp" | relative_url }})
-
-```
-4375a629c7c67c8e29db269060c955cb
-```
